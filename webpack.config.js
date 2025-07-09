@@ -90,13 +90,15 @@ module.exports = {
   output: {
     path: path.resolve('./static/dist/'),
     filename: '[name]-[hash].js',
-    publicPath: hotReload ? 'http://localhost:8080/' : '',
+    // publicPath: hotReload ? 'http://localhost:8080/' : '',
+    publicPath: hotReload ? 'https://cuddly-train-4q499xg64xg3q7r4-8000.app.github.dev/' : '',
   },
   devtool: devMode ? 'cheap-eval-source-map' : 'source-map',
   devServer: {
     hot: true,
     quiet: false,
     host: devMode ? '0.0.0.0' : 'localhost',
+    // host: devMode ? 'https://cuddly-train-4q499xg64xg3q7r4-8000.app.github.dev' : 'https://cuddly-train-4q499xg64xg3q7r4-8000.app.github.dev',
     headers: { 'Access-Control-Allow-Origin': '*' },
     watchOptions: {
       poll: 1000,

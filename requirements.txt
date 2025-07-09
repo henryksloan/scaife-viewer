@@ -27,3 +27,4 @@ scaife-viewer-atlas @https://github.com/scaife-viewer/backend/archive/scaife-vie
 scaife-viewer-core @https://github.com/scaife-viewer/backend/archive/ed7f8777be86b9f58ae58a303d34913261f4f7df.zip#subdirectory=core
 six==1.12.0
 whitenoise==4.1.2
+django

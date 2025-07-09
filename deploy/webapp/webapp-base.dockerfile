@@ -14,6 +14,7 @@ RUN npm run unit
 RUN npm run build
 
 FROM python:3.9-alpine AS python-build
+# FROM python:3.8.20-alpine3.20 as python-build
 WORKDIR /opt/scaife-viewer/src/
 RUN pip --no-cache-dir --disable-pip-version-check install virtualenv
 ENV PATH="/opt/scaife-viewer/bin:${PATH}" VIRTUAL_ENV="/opt/scaife-viewer"
@@ -26,9 +27,10 @@ RUN set -x \
     && pip install -r requirements.txt
 # TODO: Move PyGithub dependency as an extra installable
 # for scaife-viewer-core
-RUN pip install flake8 flake8-quotes isort PyGithub
+RUN pip install flake8 flake8-quotes isort PyGithub django
 
 FROM python:3.9-alpine AS python-source
+# FROM python:3.8.20-alpine3.20 as python-source
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONPATH /opt/scaife-viewer/src/
 ENV PATH="/opt/scaife-viewer/bin:${PATH}" VIRTUAL_ENV="/opt/scaife-viewer"
@@ -37,7 +39,8 @@ WORKDIR /opt/scaife-viewer/src/
 COPY --from=static-build /opt/scaife-viewer/src/static/dist /opt/scaife-viewer/src/static/dist
 COPY --from=static-build /opt/scaife-viewer/src/static/stats /opt/scaife-viewer/src/static/stats
 COPY --from=python-build /opt/scaife-viewer/ /opt/scaife-viewer/
-RUN apk --no-cache add so:libc.musl-x86_64.so.1 libgcc so:libpq.so.5 curl bash
+# RUN apk --no-cache add so:libc.musl-x86_64.so.1 libgcc so:libpq.so.5 curl bash
+RUN apk --no-cache add so:libc.musl-x86_64.so.1 build-base so:libpq.so.5 curl bash
 COPY . .
 RUN flake8 sv_pdl
 RUN isort -c **/*.py

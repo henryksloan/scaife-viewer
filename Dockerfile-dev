@@ -1,4 +1,5 @@
-FROM python:3.6-alpine3.7 AS build
+# FROM python:3.6-alpine3.7 AS build
+FROM python:3.8.20-alpine3.20 AS build
 WORKDIR /opt/scaife-viewer/src/
 RUN pip --no-cache-dir --disable-pip-version-check install virtualenv
 ENV PATH="/opt/scaife-viewer/bin:${PATH}" VIRTUAL_ENV="/opt/scaife-viewer"
@@ -6,10 +7,14 @@ COPY requirements-dev.txt requirements.txt /opt/scaife-viewer/src/
 RUN set -x \
     && virtualenv /opt/scaife-viewer \
     && apk --no-cache add \
-        build-base curl git libxml2-dev libxslt-dev postgresql-dev linux-headers \
-    && pip install -r requirements-dev.txt
+        build-base curl git libxml2-dev libxslt-dev postgresql-dev linux-headers libffi-dev \
+    && pip install -r requirements-dev.txt \
+    && pip install PyGithub \
+    && pip install django
 
-FROM python:3.6-alpine3.7
+# FROM python:3.6-alpine3.7
+FROM python:3.8.20-alpine3.20
+# FROM python:3.9-alpine
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONPATH /opt/scaife-viewer/src/
@@ -21,9 +26,11 @@ RUN set -x \
         scanelf --needed --nobanner --format '%n#p' --recursive /opt/scaife-viewer \
             | tr ',' '\n' \
             | sort -u \
+            | grep -v libgcc \
             | awk 'system("[ -e /usr/local/lib/" $1 " ]") == 0 { next } { print "so:" $1 }' \
         )" \
     && apk --no-cache add \
         $runDeps \
+        build-base \
         curl
 COPY . .

@@ -3,7 +3,7 @@
         "pk": 1,
         "model": "sites.site",
         "fields": {
-            "domain": "localhost:8000",
+            "domain": "https://cuddly-train-4q499xg64xg3q7r4-8000.app.github.dev",
             "name": "Scaife Viewer [localhost]"
         }
     },
